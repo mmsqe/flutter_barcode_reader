@@ -4,18 +4,26 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.google.zxing.Result
 import me.dm7.barcodescanner.zxing.ZXingScannerView
-
+import android.text.style.ForegroundColorSpan
+import android.text.SpannableString
+import android.R
+import android.graphics.Color
+import android.view.WindowManager
 
 class BarcodeScannerActivity : Activity(), ZXingScannerView.ResultHandler {
 
     lateinit var scannerView: me.dm7.barcodescanner.zxing.ZXingScannerView
+
+    var actionBarColor = Color.WHITE
 
     companion object {
         val REQUEST_TAKE_PHOTO_CAMERA_PERMISSION = 100
@@ -26,10 +34,25 @@ class BarcodeScannerActivity : Activity(), ZXingScannerView.ResultHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         title = ""
+        val p = intent.extras
+        val theme = p!!.getString("theme");
         scannerView = ZXingScannerView(this)
         scannerView.setAutoFocus(true)
-        // this paramter will make your HUAWEI phone works great!
-        scannerView.setAspectTolerance(0.5f)
+        scannerView.setLaserEnabled(false)
+        scannerView.setSquareViewFinder(true)
+        if (theme != null && theme.equals("libra")) {
+            actionBarColor = 0xFF42318C.toInt()
+            scannerView.setBorderColor(0xFF42318C.toInt())
+            actionBar.setBackgroundDrawable(ColorDrawable(0xFF212124.toInt()))
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                scannerView.setSystemUiVisibility(0);
+            }
+            if (android.os.Build.VERSION.SDK_INT >= 21) {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                window.statusBarColor = 0xFF212124.toInt()
+            }
+        }
         setContentView(scannerView)
     }
 
@@ -38,10 +61,16 @@ class BarcodeScannerActivity : Activity(), ZXingScannerView.ResultHandler {
             val item = menu.add(0,
                     TOGGLE_FLASH, 0, "Flash Off")
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+            val spanString = SpannableString(item.title.toString())
+            spanString.setSpan(ForegroundColorSpan(actionBarColor), 0, spanString.length, 0)
+            item.title = spanString
         } else {
             val item = menu.add(0,
                     TOGGLE_FLASH, 0, "Flash On")
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+            val spanString = SpannableString(item.title.toString())
+            spanString.setSpan(ForegroundColorSpan(actionBarColor), 0, spanString.length, 0)
+            item.title = spanString
         }
         return super.onCreateOptionsMenu(menu)
     }

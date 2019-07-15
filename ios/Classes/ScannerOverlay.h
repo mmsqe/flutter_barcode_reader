@@ -2,7 +2,6 @@
 
 @interface ScannerOverlay : UIView
   @property(nonatomic) CGRect scanLineRect;
-  
-  - (void) startAnimating;
-  - (void) stopAnimating;
+  @property(nonatomic, retain) UIColor *cornerColor;
+  -(id)initWithFrameAndTheme:(CGRect)frame theme:(UIColor *)cornerColor;
 @end

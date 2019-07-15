@@ -7,12 +7,38 @@
 #import "ScannerOverlay.h"
 
 
-@implementation BarcodeScannerViewController {
+@implementation BarcodeScannerViewController
+
+- (id)initWithTheme:(NSString *)theme
+{
+    self = [super init];
+    if (self) {
+        self.theme = theme;
+    }
+    return self;
 }
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    UINavigationBar *bar = [self.navigationController navigationBar];
+   
+
+    UIColor *barBgColor = NULL; // Navigation bar background color
+    UIColor *primaryColor = NULL; // Navigation bar text/foreground color + scan rect corners
+    
+    if ([@"libra" isEqualToString:self.theme]) {
+        barBgColor = [UIColor colorWithRed:0.11 green:0.08 blue:0.24 alpha:1.0];
+        primaryColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+    } else {
+        primaryColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+    }
+
+    if (barBgColor != NULL && primaryColor != NULL) {
+        bar.barTintColor = barBgColor;
+        bar.tintColor = primaryColor;
+    }
+  
     self.previewView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.previewView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:_previewView];
@@ -26,7 +52,7 @@
                                 options:NSLayoutFormatAlignAllBottom
                                 metrics:nil
                                   views:@{@"previewView": _previewView}]];
-  self.scanRect = [[ScannerOverlay alloc] initWithFrame:self.view.bounds];
+    self.scanRect = [[ScannerOverlay alloc] initWithFrameAndTheme:self.view.bounds theme:primaryColor];
   self.scanRect.translatesAutoresizingMaskIntoConstraints = NO;
   self.scanRect.backgroundColor = UIColor.clearColor;
   [self.view addSubview:_scanRect];
@@ -40,7 +66,6 @@
                              options:NSLayoutFormatAlignAllBottom
                              metrics:nil
                              views:@{@"scanRect": _scanRect}]];
-  [_scanRect startAnimating];
     self.scanner = [[MTBBarcodeScanner alloc] initWithPreviewView:_previewView];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel)];
   [self updateFlashButton];
@@ -82,6 +107,7 @@
 }
 
 - (void)cancel {
+    [self.delegate barcodeScannerViewController:self didScanBarcodeWithResult:nil];
     [self dismissViewControllerAnimated:true completion:nil];
 }
 
