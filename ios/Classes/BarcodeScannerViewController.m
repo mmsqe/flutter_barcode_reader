@@ -28,7 +28,7 @@
     UIColor *primaryColor = NULL; // Navigation bar text/foreground color + scan rect corners
     
     if ([@"libra" isEqualToString:self.theme]) {
-        barBgColor = [UIColor colorWithRed:0.11 green:0.08 blue:0.24 alpha:1.0];
+        barBgColor = [UIColor colorWithRed:0.80 green:0.14 blue:0.19 alpha:1.0];
         primaryColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
     } else {
         primaryColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];

@@ -41,16 +41,16 @@ class BarcodeScannerActivity : Activity(), ZXingScannerView.ResultHandler {
         scannerView.setLaserEnabled(false)
         scannerView.setSquareViewFinder(true)
         if (theme != null && theme.equals("libra")) {
-            actionBarColor = 0xFF42318C.toInt()
-            scannerView.setBorderColor(0xFF42318C.toInt())
-            actionBar.setBackgroundDrawable(ColorDrawable(0xFF212124.toInt()))
+            actionBarColor = 0xFFFFFFFF.toInt()
+            scannerView.setBorderColor(0xFFCC2431.toInt())
+            actionBar.setBackgroundDrawable(ColorDrawable(0xFFCC2431.toInt()))
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                 scannerView.setSystemUiVisibility(0);
             }
             if (android.os.Build.VERSION.SDK_INT >= 21) {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-                window.statusBarColor = 0xFF212124.toInt()
+                window.statusBarColor = 0xFFCC2431.toInt()
             }
         }
         setContentView(scannerView)
